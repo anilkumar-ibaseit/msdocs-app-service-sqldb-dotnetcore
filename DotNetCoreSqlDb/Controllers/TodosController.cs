@@ -38,9 +38,12 @@ namespace DotNetCoreSqlDb.Controllers
             }
             else 
             {
-                todos = await _context.Todo.ToListAsync();
-                TodoListByteArray = ConvertData<Todo>.ObjectListToByteArray(todos);
-                await _cache.SetAsync(_TodoItemsCacheKey, TodoListByteArray);
+                if (_context.Todo.Local.Count > 0)
+                {
+                    todos = await _context.Todo.ToListAsync();
+                    TodoListByteArray = ConvertData<Todo>.ObjectListToByteArray(todos);
+                    await _cache.SetAsync(_TodoItemsCacheKey, TodoListByteArray);
+                }
             }
 
             return View(todos);
